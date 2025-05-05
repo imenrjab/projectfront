@@ -1,0 +1,80 @@
+<p-toolbar styleClass="mb-6">
+    <ng-template #start>
+      <p-button label="New" icon="pi pi-plus" severity="secondary" class="mr-2" (onClick)="openNew()" />
+      <p-button severity="secondary" label="Delete" icon="pi pi-trash" outlined  [disabled]="!selectedEmploye || !selectedEmploye.length" />
+    </ng-template>
+  
+    <ng-template #end>
+      <p-button label="Export" icon="pi pi-upload" severity="secondary" (onClick)="exportCSV()" />
+    </ng-template>
+  </p-toolbar>
+  
+  <p-table
+    #dt
+    [value]="employes()"
+    [rows]="10"
+    [columns]="cols"
+    [paginator]="true"
+    [globalFilterFields]="['nom', 'prenom', 'email']"
+    [tableStyle]="{ 'min-width': '75rem' }"
+    [(selection)]="selectedEmploye"
+    [rowHover]="true"
+    dataKey="id"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} employes"
+    [showCurrentPageReport]="true"
+    [rowsPerPageOptions]="[10, 20, 30]">
+  
+    <ng-template #caption>
+      <div class="flex items-center justify-between">
+        <h5 class="m-0">Gestion des employés</h5>
+        <p-iconfield>
+          <p-inputicon styleClass="pi pi-search" />
+          <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Rechercher..." />
+        </p-iconfield>
+      </div>
+    </ng-template>
+  
+    <ng-template #header>
+      <tr>
+        <th style="width: 3rem">#</th>
+        <th *ngFor="let col of cols">{{ col.header }}</th>
+        <th>Actions</th>
+      </tr>
+    </ng-template>
+  
+    <ng-template #body let-employe>
+      <tr>
+        <td><p-tableCheckbox [value]="employe" /></td>
+        <td *ngFor="let col of cols">{{ employe[col.field] }}</td>
+        <td><p-button icon="pi pi-trash" 
+            severity="danger" [rounded]="true" [outlined]="true"
+            (click)="deleteRonders(employe)" />
+          <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true" (click)="editEmploye(employe)" />
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+  
+  <p-dialog [(visible)]="employeDialog" [style]="{ width: '450px' }" header="Détails de l'employé" [modal]="true">
+    <ng-template #content>
+      <div class="flex flex-col gap-4">
+        <div *ngFor="let field of ['nom','prenom','email','tele','matrecule','adress','degre','password']">
+          <label [for]="field" class="block font-bold mb-2">{{ field | titlecase }}</label>
+          <input type="text" pInputText [id]="field" [(ngModel)]="employe[field]" required />
+          <small class="text-red-500" *ngIf="submitted && !employe[field]">Champ requis.</small>
+        </div>
+  
+        <div>
+          <label for="poste" class="block font-bold mb-2">Poste</label>
+          <p-dropdown [options]="poste" [(ngModel)]="employe.poste" placeholder="Choisir un poste" />
+        </div>
+      </div>
+    </ng-template>
+    <p-toast></p-toast>
+  
+    <ng-template #footer>
+        <p-button *ngIf="submittedaddnew" label="Save" icon="pi pi-check" (click)="saveEmploye()"></p-button>
+        <p-button *ngIf="submittedupdate" label="Update" icon="pi pi-check" (click)="saveEmploye()"></p-button>
+        <p-button label="Cancel" icon="pi pi-times" styleClass="p-button-text" (click)="hideDialog()"></p-button>
+    </ng-template>
+  </p-dialog>

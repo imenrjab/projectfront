@@ -1,0 +1,67 @@
+.container {
+    max-width: 1000px;
+    margin: auto;
+    padding: 20px;
+    font-family: 'Segoe UI', sans-serif;
+  }
+  
+  h1, h2 {
+    color: #2c3e50;
+    margin-bottom: 10px;
+  }
+  
+  .section {
+    margin-top: 30px;
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+  
+  .schedule-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .schedule-table th,
+  .schedule-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+  }
+  
+  .schedule-table th {
+    background-color: #34495e;
+    color: white;
+  }
+  
+  .leave-list {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .leave-list li {
+    margin-bottom: 10px;
+  }
+  
+  button {
+    margin-left: 10px;
+    padding: 5px 10px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #2980b9;
+  }
+  
+  form input {
+    margin: 5px;
+    padding: 5px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+  }
+  
