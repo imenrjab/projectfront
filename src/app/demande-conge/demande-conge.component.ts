@@ -145,7 +145,7 @@ loadDemoData() {
 
     this.exportColumns = this.cols.map((col) => ({ title: col.header, dataKey: col.field }));
 }
-
+//filter
 
 onGlobalFilter(table: Table, event: Event) {
     table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
