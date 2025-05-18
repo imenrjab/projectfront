@@ -1,4 +1,4 @@
-export interface Rondersemp {
+export interface EmployeSociete {
 
 	id: number
 	nom: string;

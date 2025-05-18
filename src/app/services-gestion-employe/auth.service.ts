@@ -4,7 +4,8 @@ import { Router } from '@angular/router';
 import { Observable, of, switchMap, throwError } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Ronders } from '../models-gestion-employe/Ronders';
-import { Rondersemp } from '../models-gestion-employe/Rondersemp';
+import { EmployeSociete } from '../models-gestion-employe/EmployeSociete';
+
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,10 @@ export class AuthService {
 
   baseUrl = environment.API_BASE_URL+ "/auth"
   baseUrll = environment.API_BASE_URL+ "/ronders"
+baseUrll2 = environment.API_BASE_URL+ "/chefdequart"
+baseUrll3 = environment.API_BASE_URL+ "/chefdebloque"
 
+ 
  
  
   private router = inject(Router);
@@ -52,13 +56,6 @@ private _authenticated: boolean = false;
   // -----------------------------------------------------------------------------------------------------
   // @ Public methods
   // -----------------------------------------------------------------------------------------------------
-
-
-
-
-
-
-
 
  
   /**
@@ -187,10 +184,6 @@ changePassword(changePassword: ChangePassword): Observable<any> {
 *
 * @param Parent
 */
-  signUpRonders(user: Ronders): Observable<any>
-  {
-      return this._httpClient.post(`${this.baseUrl}/registerRonders`, user); 
-  }
 
 
 
@@ -232,20 +225,25 @@ ajouterprof(registerRequest: Addprof):Observable<Responses>{
   return this._httpClient.post<Responses>(url,registerRequest)
 }*/
 
+// bloc rondres
+signUpRonders(user: Ronders): Observable<any>
+{
+    return this._httpClient.post(`${this.baseUrl}/registerRonders`, user); 
+}
 
-
-updatemploye(registerRequest: Rondersemp):Observable<any>{
+updatemploye(registerRequest: EmployeSociete):Observable<any>{
   const url=this.baseUrll+"/updaterendors"
 
-  return this._httpClient.post<any>(url,registerRequest)
+  return this._httpClient.put<any>(url,registerRequest)
 }
+
 
 
 getemployebyId(id: number): Observable<any> {
   return this._httpClient.get<any>(`${this.baseUrl}/employe_by_id/${id}`);
 }
-getAllemploye(): Observable<Rondersemp[]> {
-  return this._httpClient.get<Rondersemp[]>(`${this.baseUrll}/lister_employe`);
+getAllemploye(): Observable<EmployeSociete[]> {
+  return this._httpClient.get<EmployeSociete[]>(`${this.baseUrll}/lister_employe`);
 }
 deleteemploye(id: number): Observable<void> {
   return this._httpClient.delete<void>(`${this.baseUrll}/delete/${id}`);
@@ -253,37 +251,56 @@ deleteemploye(id: number): Observable<void> {
 
 
 
-/*
 
-getProfById(id: number): Observable<Addprof> {
-  return this._httpClient.get<Addprof>(`${this.baseUrlcontprof}/Getbyidprof/${id}`);
+//chef de qurt
+getemployequartbyId(id: number): Observable<any> {
+  return this._httpClient.get<any>(`${this.baseUrll2}/getbyid/${id}`);
 }
-getProfauth(id: number): Observable<any> {
-  return this._httpClient.get<any>(`${this.baseUrlcontuser}/findProfbyid/${id}`);
+getAllemployequart(): Observable<EmployeSociete[]> {
+  return this._httpClient.get<EmployeSociete[]>(`${this.baseUrll2}/lister`);
 }
-deleteProf(id: number): Observable<void> {
-  return this._httpClient.delete<void>(`${this.baseUrlcontprof}/delete/${id}`);
+deleteemployequart(id: number): Observable<void> {
+  return this._httpClient.delete<void>(`${this.baseUrll2}/delet/${id}`);
+  
 }
-getAllprof(): Observable<ProfesseurDto[]> {
-  return this._httpClient.get<ProfesseurDto[]>(`${this.baseUrlcontprof}/findall`);
+updatemployequart(registerRequest: EmployeSociete):Observable<any>{
+  const url=this.baseUrll2+"/update"
+
+  return this._httpClient.post<any>(url,registerRequest)
 }
-getRole = () => {
-  var user: any;
-  user = localStorage.getItem('accesstoken');
-  let token = JSON.parse(user).token;
-  const decodedToken = JSON.parse(atob(token.split('.')[1]));
-  return decodedToken.authorities[0].authority;
+signUpchefdequart(user: Ronders): Observable<any>
+{
+    return this._httpClient.post(`${this.baseUrl}/registerChefdequart`, user); 
 }
-/*getuserByRole1(userrole: UserRole):Observable<UserDto[]>{
-  const url=this.baseUrl+"/listeuserbyrole"
-  return this.httpClient.post<UserDto[]>(url,userrole)
-}*/
-/*getuseralluser(): Observable<UserDto[]> {
-  return this.httpClient.get<UserDto[]>(`${this.baseUrl}/listeuserbyrole`)
-  .pipe(
-    map((response:any) => response as UserDto[])
-  );
-}*/
+
+//chef de bloc
+getemployeblocbyId(id: number): Observable<any> {
+  return this._httpClient.get<any>(`${this.baseUrll3}/getbyid/${id}`);
+}
+getAllemployebloc(): Observable<EmployeSociete[]> {
+  return this._httpClient.get<EmployeSociete[]>(`${this.baseUrll3}/lister`);
+}
+deleteemployebloc(id: number): Observable<void> {
+  return this._httpClient.delete<void>(`${this.baseUrll3}/Delete/${id}`);
+  
+}
+updatemployebloc(registerRequest: EmployeSociete):Observable<any>{
+  const url=this.baseUrll3+"/update"
+
+  return this._httpClient.post<any>(url,registerRequest)
+}
+
+
+
+
+
+
+
+
+
+
+
+}
 
 
 
@@ -336,4 +353,4 @@ console.log("HHHHHHHHH",decodedToken)
   );  
 }*/
 
-}
+

@@ -9,6 +9,7 @@ export interface CongeDto {
   status: CongeStatus;
   typeConge: TypeConge;
   approuve: boolean;
+  soldeRestant?: number; //
 }
 
 

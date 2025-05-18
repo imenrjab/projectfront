@@ -1,0 +1,114 @@
+<p-toolbar class="mb-6">
+  <ng-template #start>
+    <p-button
+      label="Supprimer"
+      icon="pi pi-trash"
+      severity="secondary"
+      outlined
+      (onClick)="deleteSelectedConge()"
+      [disabled]="!selectedConges || !selectedConges.length"
+    />
+  </ng-template>
+
+  
+    
+  
+</p-toolbar>
+
+<p-table
+  #dt
+  [value]="congeDtos()"
+  [(selection)]="selectedConges"
+  dataKey="id"
+  [paginator]="true"
+  [rows]="10"
+  [rowsPerPageOptions]="[10, 20, 30]"
+  [globalFilterFields]="['iduser', 'typeConge', 'status']"
+  [rowHover]="true"
+  [tableStyle]="{ 'min-width': '75rem' }"
+  currentPageReportTemplate="Affichage {first} à {last} de {totalRecords} congés"
+  [showCurrentPageReport]="true"
+>
+  <ng-template #caption>
+    <div class="flex items-center justify-between">
+      <h5 class="m-0">Demandes de congé du personnel</h5>
+    <span class="p-input-icon-left">
+  <i class="pi pi-search"></i>
+  <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Rechercher..." />
+</span>
+
+    </div>
+  </ng-template>
+
+  <ng-template pTemplate="header">
+    <tr>
+      <th style="width: 3rem">
+        <p-tableHeaderCheckbox />
+      </th>
+      <th pSortableColumn="iduser">ID Utilisateur <p-sortIcon field="iduser" /></th>
+      <th pSortableColumn="date_de_demende">Date Demande <p-sortIcon field="date_de_demende" /></th>
+      <th pSortableColumn="dateDebut">Début <p-sortIcon field="dateDebut" /></th>
+      <th pSortableColumn="dateFin">Fin <p-sortIcon field="dateFin" /></th>
+      <th pSortableColumn="typeConge">Type <p-sortIcon field="typeConge" /></th>
+      <th pSortableColumn="soldeRestant">Solde restant <p-sortIcon field="soldeRestant" /></th>
+...
+
+
+
+      <th pSortableColumn="status">Statut <p-sortIcon field="status" /></th>
+    </tr>
+  </ng-template>
+
+  <ng-template pTemplate="body" let-conge>
+   <tr (click)="onRowSelect(conge)" style="cursor: pointer;">
+
+      <td>
+        <p-tableCheckbox [value]="conge" />
+      </td>
+      <td>{{ conge.iduser }}</td>
+      <td>{{ conge.date_de_demende | date: 'shortDate' }}</td>
+      <td>{{ conge.dateDebut | date: 'shortDate' }}</td>
+      <td>{{ conge.dateFin | date: 'shortDate' }}</td>
+      <td>{{ conge.typeConge }}</td>
+      <td>
+  <span [ngClass]="{ 'text-red-600': conge.soldeRestant !== undefined && conge.soldeRestant < 0 }">
+    {{ conge.soldeRestant ?? '...' }} jours
+  </span>
+</td>
+
+      <td>{{ conge.status }}</td>
+    </tr>
+  </ng-template>
+</p-table>
+
+<p-confirmdialog [style]="{ width: '450px' }" />
+<p-dialog [(visible)]="displayDialog" header="Détails du congé" [style]="{ width: '400px' }" [modal]="true">
+  <ng-template pTemplate="content">
+    <div class="p-fluid">
+      <div class="p-field">
+        <label>ID Utilisateur</label>
+        <p>{{ selectedConge?.iduser }}</p>
+      </div>
+      <div class="p-field">
+        <label>Date début</label>
+        <p>{{ selectedConge?.dateDebut | date: 'fullDate' }}</p>
+      </div>
+      <div class="p-field">
+        <label>Date fin</label>
+        <p>{{ selectedConge?.dateFin | date: 'fullDate' }}</p>
+      </div>
+      <div class="p-field">
+        <label>Type</label>
+        <p>{{ selectedConge?.typeConge }}</p>
+      </div>
+      <div class="p-field">
+        <label>Statut</label>
+        <p>{{ selectedConge?.status }}</p>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template pTemplate="footer">
+    <p-button label="Refuser" icon="pi pi-times" severity="danger" (click)="refuserConge()" />
+    <p-button label="Approuver" icon="pi pi-check" severity="success" (click)="approuverConge()" />
+  </ng-template>
+</p-dialog>

@@ -52,6 +52,7 @@
       <th pSortableColumn="date_de_demende">Date Demande <p-sortIcon field="date_de_demende" /></th>
       <th pSortableColumn="dateDebut">Début <p-sortIcon field="dateDebut" /></th>
       <th pSortableColumn="dateFin">Fin <p-sortIcon field="dateFin" /></th>
+      <th pSortableColumn="dateFin">jours pris <p-sortIcon field="dateFin" /></th>
       <th pSortableColumn="typeConge">Type <p-sortIcon field="typeConge" /></th>
       <th pSortableColumn="status">Statut <p-sortIcon field="status" /></th>
       <th>Actions</th>
@@ -66,14 +67,30 @@
       </td>
       <td>{{ conge.iduser }}</td>
       <td>{{ conge.date_de_demende | date: 'shortDate' }}</td>
-      <td>{{ conge.dateDebut | date: 'shortDate' }}</td>
-      <td>{{ conge.dateFin | date: 'shortDate' }}</td>
+      <td>{{ conge.dateDebut | date: 'dd-MM-yyyy' }}</td>
+      <td>{{ conge.dateFin | date: 'dd-MM-yyyy' }}</td>
+      <td>{{ conge.daysTaken }}</td>
       <td>{{ conge.typeConge }}</td>
       <td>{{ conge.status }}</td>
-      <td>
-        <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true" (click)="editconge(conge)" />
-        <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true" (click)="deleteSelectedConge()" />
-      </td>
+     <td>
+  <p-button 
+    icon="pi pi-pencil" 
+    class="mr-2" 
+    [rounded]="true" 
+    [outlined]="true" 
+    (click)="editconge(conge)" 
+    [disabled]="conge.status === 'APPROUVE' || conge.status === 'ANNULE'"
+  />
+  <p-button 
+    icon="pi pi-trash" 
+    severity="danger" 
+    [rounded]="true" 
+    [outlined]="true" 
+    (click)="deleteSelectedConge()" 
+    [disabled]="conge.status === 'APPROUVE' || conge.status === 'ANNULE'"
+  />
+</td>
+
     </tr>
   </ng-template>
 </p-table>

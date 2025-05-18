@@ -1,0 +1,57 @@
+<div class="card">
+  <h2>Gestion du Table de Roulement à STEG  <!-- {{ selectedGroupId }} --></h2>
+
+
+  <div class="filters">
+   <p-dropdown 
+  [options]="monthOptions" 
+  [(ngModel)]="selectedMonth" 
+  placeholder="Mois"
+  optionLabel="label"
+  optionValue="value">
+</p-dropdown>
+
+
+
+
+
+
+    <input type="number" [(ngModel)]="selectedYear" pInputText placeholder="Année" class="p-inputtext-sm"/>
+
+
+    <button pButton label="Charger" icon="pi pi-search" class="p-button-sm" (click)="loadPlanning()"></button>
+    <button pButton label="Générer" icon="pi pi-cog" class="p-button-sm p-button-success" (click)="generatePlanning()"></button>
+  </div>
+
+
+  <p-table [value]="vacations" [paginator]="true" [rows]="10" [loading]="isLoading" responsiveLayout="scroll">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>horaire</th>
+        <th>Date</th>
+        <th>Équipe</th>
+        <th>Poste</th>  
+         <th>Nom Employe</th>                                     id: number;
+                                   
+ 
+      
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-vacation>
+      <tr>
+        <td>{{ vacation.shift }}</td>
+        <td>{{ vacation.date }}</td>
+        <td>{{ vacation.equipeNom }}</td>
+        <td>{{ vacation.posteCode }}</td>
+        <td>{{ vacation.userNomComplet}}</td>
+        <td>{{ vacation.groupeNom}}</td>
+
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+
+
+
+
+<p>gestiondetablederoulement works!</p>

@@ -1,7 +1,7 @@
 import { Component, inject, signal, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { GestioncongeService } from '../services-gestion-employe/gestionconge.service';
+import { GestioncongeService } from '../../services-gestion-employe/gestionconge.service';
 import { CalendarModule } from 'primeng/calendar';
 import { ButtonModule } from 'primeng/button';
 import { Message, MessageModule } from 'primeng/message';
@@ -21,8 +21,8 @@ import { TagModule } from 'primeng/tag';
 import { TextareaModule } from 'primeng/textarea';
 import { ToastModule } from 'primeng/toast';
 import { ToolbarModule } from 'primeng/toolbar';
-import { CongeDto, CongeStatus, TypeConge } from '../models-gestion-employe/congedto';
-import { Periodeconge } from '../models-gestion-employe/periodeconge';
+import { CongeDto, CongeStatus, TypeConge } from '../../models-gestion-employe/congedto';
+import { Periodeconge } from '../../models-gestion-employe/periodeconge';
 
 
 
@@ -174,7 +174,7 @@ openNew() {
 editconge(congeDto: CongeDto) {
     this.congeDto = { ...congeDto };
     this.congeDtoDialog = true;
-    console.log("ridha",this.congeDto)
+    console.log("imen",this.congeDto)
     this.submittedaddnew= false;
     this.submittedupdate= true;
 }
@@ -321,6 +321,7 @@ saveConge() {
         } else {
             console.log("hhhh2",this.congeDto)
             // Consommer le service pour enregistrer la formation en backend
+            this.congeDto.date_de_demende=new Date()
             this.congeService.demanderConge(this.congeDto).subscribe({
                 next: (newcongeDto) => {
                     this.congeDtos.set([...this.congeDtos(), newcongeDto]);

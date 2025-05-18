@@ -11,7 +11,7 @@
   
   <p-table
     #dt
-    [value]="employes()"
+    [value]="chefdequarts()"
     [rows]="10"
     [columns]="cols"
     [paginator]="true"
@@ -20,13 +20,13 @@
     [(selection)]="selectedEmploye"
     [rowHover]="true"
     dataKey="id"
-    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} employes"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} chefdequarts"
     [showCurrentPageReport]="true"
     [rowsPerPageOptions]="[10, 20, 30]">
   
     <ng-template #caption>
       <div class="flex items-center justify-between">
-        <h5 class="m-0">Gestion des employés</h5>
+        <h5 class="m-0">Chef de quart </h5>
         <p-iconfield>
           <p-inputicon styleClass="pi pi-search" />
           <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Rechercher..." />
@@ -44,22 +44,15 @@
   
     <ng-template #body let-employe>
       <tr>
-        <td><p-tableCheckbox [value]="employe" /></td>
+        <td><p-tableCheckbox [value]="chefdequart" /></td>
         <td *ngFor="let col of cols">{{ employe[col.field] }}</td>
         <td><p-button icon="pi pi-trash" 
             severity="danger" [rounded]="true" [outlined]="true"
-            (click)="supprimerEmploye(employe)" />
-            
-          <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true" (click)="editEmploye(employe)" />
+            (click)="deleteRonders(chefdequart)" />
+          <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true" (click)="editEmploye(chefdequart)" />
         </td>
-         
-    
       </tr>
-    </ng-template> 
-   
-
-
-
+    </ng-template>
   </p-table>
   
   <p-dialog [(visible)]="employeDialog" [style]="{ width: '450px' }" header="Détails de l'employé" [modal]="true">
@@ -67,16 +60,16 @@
       <div class="flex flex-col gap-4">
         <div *ngFor="let field of ['nom','prenom','email','tele','matrecule','adress','password']">
           <label [for]="field" class="block font-bold mb-2">{{ field | titlecase }}</label>
-          <input type="text" pInputText [id]="field" [(ngModel)]="employe[field]" required />
-          <small class="text-red-500" *ngIf="submitted && !employe[field]">Champ requis.</small>
+          <input type="text" pInputText [id]="field" [(ngModel)]="chefdequart[field]" required />
+          <small class="text-red-500" *ngIf="submitted && !chefdequart[field]">Champ requis.</small>
         </div>
-        <div>
+   <div>
           <label for="poste" class="block font-bold mb-2">degre</label>
-          <p-dropdown [options]="degrees" [(ngModel)]="employe.degre" placeholder="Choisir un degre" />
+          <p-dropdown [options]="degrees" [(ngModel)]="chefdequart.degre" placeholder="Choisir un degre" />
         </div>
         <div>
           <label for="poste" class="block font-bold mb-2">Poste</label>
-          <p-dropdown [options]="poste" [(ngModel)]="employe.poste" placeholder="Choisir un poste" />
+          <p-dropdown [options]="poste" [(ngModel)]="chefdequart.poste" placeholder="Choisir un poste" />
         </div>
       </div>
     </ng-template>

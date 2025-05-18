@@ -9,7 +9,10 @@ import { PasswordModule } from 'primeng/password';
 import { RippleModule } from 'primeng/ripple';
 import { AppFloatingConfigurator } from '../../../layout/component/app.floatingconfigurator';
 import { AuthRequest } from '../../../models-gestion-employe/auth-request';
-
+import { JwtPayload, jwtDecode } from "jwt-decode";
+interface CustomJwtPayload extends JwtPayload {
+  authorities: { authority: string }[];
+}
 @Component({
 
   selector: 'app-login',
@@ -73,11 +76,11 @@ export class LoginComponent implements OnInit {
 
 
             const token = response.accessToken;      
-           // const decodedToken = jwtDecode<CustomJwtPayload>(token);
-           // const authorities = decodedToken.authorities[0].authority;
-           // console.log(decodedToken.authorities[0].authority);
-            //localStorage.setItem("role",authorities)
-            this._router.navigateByUrl('/pages/component-gestionemploye/gestion');
+           const decodedToken = jwtDecode<CustomJwtPayload>(token);
+            const authorities = decodedToken.authorities[0].authority;
+           console.log(decodedToken.authorities[0].authority);
+            localStorage.setItem("role",authorities)
+            this._router.navigateByUrl('/');
             // Navigate to the redirect url
         },
         error: (error) => {

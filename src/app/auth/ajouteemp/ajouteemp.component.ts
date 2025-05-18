@@ -9,6 +9,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { RippleModule } from 'primeng/ripple';
 import { CommonModule } from '@angular/common';
+import { CongeService } from '../../services-gestion-employe/conge.service';
 
 @Component({
   selector: 'app-ajouteemp',
@@ -26,7 +27,7 @@ poste : string[]=["T_G","T_V","AUX","HRSG"]
 
 
 
-  constructor() { }
+  constructor( private congeService: CongeService) { }
 
   ngOnInit(): void {
     this.registerForm = this.fb.group({
@@ -48,21 +49,30 @@ poste : string[]=["T_G","T_V","AUX","HRSG"]
 
      
     } 
-    register(): void {
-      const newUser : Ronders = this.registerForm.value;
-     
-      if (newUser) {
-  
-        this.authService.signUpRonders(newUser).subscribe({
-          next: (response) => {
-            this.toastr.success('Utilisateur enregistré avec succès !');
-            
-            
+ register(): void {
+  const newUser: Ronders = this.registerForm.value;
+
+  if (newUser) {
+    this.authService.signUpRonders(newUser).subscribe({
+      next: (response) => {
+        this.toastr.success('Utilisateur enregistré avec succès !');
+
+        // 🟢 Appel pour initialiser le solde
+        this.congeService.initializeSolde(response.id).subscribe({
+          next: () => {
+            this.toastr.info('Solde de congé initialisé.');
           },
-          error: (error) => {
-            this.toastr.error('Erreur lors de l\'enregistrement.', error);
+          error: () => {
+            this.toastr.warning('Utilisateur enregistré, mais échec de l\'initialisation du solde.');
           }
         });
-      } else {
-        this.toastr.error('Veuillez remplir tous les champs correctement.');
-}}}
+      },
+      error: (error) => {
+        this.toastr.error('Erreur lors de l\'enregistrement.', error);
+      }
+    });
+  } else {
+    this.toastr.error('Veuillez remplir tous les champs correctement.');
+  }
+}
+}

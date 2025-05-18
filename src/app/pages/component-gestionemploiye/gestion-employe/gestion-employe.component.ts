@@ -10,8 +10,7 @@ import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
-import { RippleModule } from 'primeng/ripple';
-import { Fonction, Rondersemp } from '../../../models-gestion-employe/Rondersemp';
+import { RippleModule } from 'primeng/ripple'
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DatePickerModule } from 'primeng/datepicker';
 import { DialogModule } from 'primeng/dialog';
@@ -26,6 +25,7 @@ import { TagModule } from 'primeng/tag';
 import { TextareaModule } from 'primeng/textarea';
 import { ToastModule } from 'primeng/toast';
 import { ToolbarModule } from 'primeng/toolbar';
+import { EmployeSociete, Fonction } from '../../../models-gestion-employe/EmployeSociete';
 
 interface Column {
   field: string;
@@ -38,30 +38,33 @@ interface ExportColumn {
   title: string;
   dataKey: string;
 }
-
+interface DegreeOption {
+    label: string;
+    value: string;
+  }
 
 @Component({
   selector: 'app-gestion-employe',
   standalone:true,
   imports:[
-  CommonModule,
-  TableModule,
-  FormsModule,
-  ButtonModule,
-  RippleModule,
-  ToastModule,
-  ToolbarModule,
-  RatingModule,
-  InputTextModule,
-  TextareaModule,
-  SelectModule,
-  RadioButtonModule,
-  InputNumberModule,
-  DialogModule,
-  DatePickerModule,
-  TagModule,
-  InputIconModule,
-  IconFieldModule,
+    CommonModule,
+    TableModule,
+    FormsModule,
+    ButtonModule,
+    RippleModule,
+    ToastModule,
+    ToolbarModule,
+    RatingModule,
+    InputTextModule,
+    TextareaModule,
+    SelectModule,
+    RadioButtonModule,
+    InputNumberModule,
+    DialogModule,
+    TagModule,
+    InputIconModule,
+    IconFieldModule,
+    ConfirmDialogModule,
   DropdownModule,
   ConfirmDialogModule],
    providers: [MessageService, ConfirmationService],
@@ -72,17 +75,19 @@ interface ExportColumn {
 export class GestionEmployeComponent implements OnInit {
 
   employeDialog : boolean = false;
+  
 
-    employes = signal<Rondersemp[]>([]);
+  
+
+    employes = signal<EmployeSociete[]>([]);
     poste : string[]=["T_G","T_V","AUX","HRSG"]
-    
+    degrees: string[] = ["CADRE", "MAITRISE", "STAGIAIRE"];
 
 
+   employe: EmployeSociete ={id:0, nom :'',prenom :'',matrecule :0, tele :0, fonction :Fonction.AGENT, degre :'', adress:'',  email :'',  enabled :true,roles : [] ,poste:'', password:''};
 
-   employe: Rondersemp ={id:0, nom :'',prenom :'',matrecule :0, tele :0, fonction :Fonction.AGENT, degre :'', adress:'',  email :'',  enabled :true,roles : [] ,poste:'', password:''};
 
-
-    selectedEmploye!: Rondersemp[] | null;
+    selectedEmploye!: EmployeSociete[] | null;
 
 
     submitted: boolean = false;
@@ -104,7 +109,11 @@ export class GestionEmployeComponent implements OnInit {
         private authService: AuthService,
         private messageService: MessageService,
         private confirmationService: ConfirmationService
-    ) {}
+    ) {
+
+       
+        }
+    
 
 
     exportCSV() {
@@ -133,7 +142,6 @@ export class GestionEmployeComponent implements OnInit {
             { field: 'tele', header: 'Tele' },
             { field: 'degre', header: 'degre' },
             { field: 'fonction', header: 'Fonction' },
-
             { field: 'adress', header: 'Adresse' },
             { field: 'email', header: 'Email' },
             { field: 'enabled', header: 'Enabled' },
@@ -166,7 +174,7 @@ export class GestionEmployeComponent implements OnInit {
     }
 
 
-    editEmploye(employe: Rondersemp) {
+    editEmploye(employe: EmployeSociete) {
         this.employe = { ...employe };
         this.employeDialog = true;
         console.log("ridha",this.employe)
@@ -185,8 +193,9 @@ export class GestionEmployeComponent implements OnInit {
         this.submitted = false;
     }
 
-
+/* 
     deleteRonders(employe: Ronders) {
+        console.log("hhhhhh",employe)
         this.confirmationService.confirm({
             message: 'Are you sure you want to delete ' + employe.id + '?',
             header: 'Confirm',
@@ -194,7 +203,7 @@ export class GestionEmployeComponent implements OnInit {
             accept: () => {
                 this.authService.deleteemploye(this.employe.id).subscribe({
                     next: (newemploye) => {
-                     
+                        console.log("hhhhhh",employe)
                     },
                     error: (err) => {
                         this.messageService.add({
@@ -217,7 +226,7 @@ export class GestionEmployeComponent implements OnInit {
             }
         });
     }
-
+ */
 
     findIndexById(id: number): number {
         let index = -1;
@@ -257,75 +266,110 @@ export class GestionEmployeComponent implements OnInit {
     } */
 
 
-    saveEmploye() {
-        this.submitted = true;
-   
-        if (this.employe.nom.trim()) {
-            if (this.employe.id) {
-
-                 
-                this.authService.updatemploye(this.employe).subscribe({
-                    next: (newEmploye) => {
-                        this.loadDemoData();
-                        this.messageService.add({
-
-
-                            severity: 'success',
-                            summary: 'Successful',
-                            detail: 'Employe Updated',
-                            life: 3000
-                        });
-                    },
-                    error: (err) => {
-                        this.messageService.add({
-                            severity: 'error',
-                            summary: 'Error',
-                            detail: 'Failed to create Employe',
-                            life: 3000
-                        });
-                        console.error('Error creating employe:', err);
-                    }
-                });
-
-
-                // Mise à jour locale de la formation dans le Signal Store
-               /*  let _Formations = this.formations();
-                _Formations[this.findIndexById(this.formation.id)] = this.formation;
-                this.formations.set([..._Formations]); */
-   
-                this.messageService.add({
-                    severity: 'success',
-                    summary: 'Successful',
-                    detail: 'Employe Updated',
-                    life: 3000
-                });
-            } else {
-                console.log("hhhh2",this.employe)
-                // Consommer le service pour enregistrer la formation en backend
-                this.authService.signUpRonders(this.employe).subscribe({
-                    next: (newEmploye) => {
-                        this.employes.set([...this.employes(), newEmploye]);
-                        this.messageService.add({
-                            severity: 'success',
-                            summary: 'Successful',
-                            detail: 'Employe Created',
-                            life: 3000
-                        });
-                    },
-                    error: (err) => {
-                        this.messageService.add({
-                            severity: 'error',
-                            summary: 'Error',
-                            detail: 'Failed to create employe',
-                            life: 3000
-                        });
-                        console.error('Error creating employe:', err);
-                    }
-                });
+        saveEmploye() {
+            this.submitted = true;
+        
+            if (this.employe.nom.trim()) {
+                console.log('employe.id:', this.employe.id);
+                if (this.employe.id) {
+                    // Mise à jour
+                    this.authService.updatemploye(this.employe).subscribe({
+                        next: (updatedEmploye) => {
+                            this.loadDemoData();
+                            this.messageService.add({
+                                severity: 'success',
+                                summary: 'Successful',
+                                detail: 'Employe Updated',
+                                life: 3000
+                            });
+                        },
+                        error: (err) => {
+                            this.messageService.add({
+                                severity: 'error',
+                                summary: 'Error',
+                                detail: 'Failed to update Employe',
+                                life: 3000
+                            });
+                            console.error('Error updating employe:', err);
+                        }
+                    });
+                } else {
+                    // Création
+                    this.authService.signUpRonders(this.employe).subscribe({
+                        next: (newEmploye) => {
+                            this.employes.set([...this.employes(), newEmploye]);
+                            this.messageService.add({
+                                severity: 'success',
+                                summary: 'Successful',
+                                detail: 'Employe Created',
+                                life: 3000
+                            });
+                        },
+                        error: (err) => {
+                            this.messageService.add({
+                                severity: 'error',
+                                summary: 'Error',
+                                detail: 'Failed to create Employe',
+                                life: 3000
+                            });
+                            console.error('Error creating employe:', err);
+                        }
+                    });
+                }
+        
+                this.employeDialog = false;
             }
-   
-            this.employeDialog = false;
         }
-    }
+        /* deleteEmp(employe: Ronders) {
+            alert("hhhhhhhhhhhhhh")
+            this.confirmationService.confirm({
+                message: 'Are you sure you want to delete ' + employe.id + '?',
+                header: 'Confirm',
+                icon: 'pi pi-exclamation-triangle',
+                accept: () => {
+                    console.log("hhhh",this.employe.id)
+                    this.authService.deleteemploye(this.employe.id).subscribe({
+                        next: (newSession) => {
+    alert("kkkkkkkkkkkkkkkkkkkk")
+    
+                        },
+                        error: (err) => {
+                            this.messageService.add({
+                                severity: 'error',
+                                summary: 'Error',
+                                detail: 'Failed to create employe ',
+                                life: 3000
+                            });
+                            console.error('Error creating employe:', err);
+                        }
+                    });
+                    this.employes.set(this.employes().filter((val) => val.id !== employe.id));
+                    //this.Session = new Session();
+                    this.messageService.add({
+                        severity: 'success',
+                        summary: 'Successful',
+                        detail: 'empolye deleted',
+                        life: 3000
+                    });
+                }
+            });
+        } */
+    
+            supprimerEmploye(employe: Ronders): void {
+                if (confirm('Voulez-vous vraiment supprimer cet employé ?')) {
+                  this.authService.deleteemploye(employe.id).subscribe({
+                    next: () => {
+                     // this.employes = this.employes.filter(e => e.id !== id);
+                      alert('Employé supprimé avec succès');
+                      this.loadDemoData();
+                    },
+                    error: (err) => {
+                      console.error('Erreur lors de la suppression :', err);
+                      alert('Échec de la suppression');
+                    }
+                  });
+                }
+              }
+    
    
 }
